@@ -23,6 +23,8 @@ public class AI<Datatype>
 
     private Equalable equalsQuery;
 
+    private Neuron<Datatype> syn = null;
+
     public AI(Equalable equalsQuery)
     {
         inputLayer = new ArrayList<>();
@@ -53,8 +55,6 @@ public class AI<Datatype>
 
         return null;
     }
-
-    private Neuron<Datatype> syn = null;
 
     public void synchronize(Datatype data)
     {
@@ -106,5 +106,10 @@ public class AI<Datatype>
         syn = newNeuron;
 
         return;
+    }
+
+    public void finish()
+    {
+        syn = null;
     }
 }

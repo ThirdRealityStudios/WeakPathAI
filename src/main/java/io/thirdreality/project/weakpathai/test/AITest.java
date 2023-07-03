@@ -110,4 +110,88 @@ public class AITest
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.get(0).getData(), "a");
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayerWeight.get(0), 0);
     }
+
+    @Test
+    public void testFinish()
+    {
+        assertEquals(ai.inputLayer.size(), 0);
+
+        ai.synchronize("Hello ");
+
+        assertEquals(ai.inputLayer.size(), 1);
+        assertEquals(ai.inputLayer.get(0).getData(), "Hello ");
+
+        ai.synchronize("World");
+
+        assertEquals(ai.inputLayer.get(0).hiddenLayer.size(), 1);
+        assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).getData(), "World");
+        assertEquals(ai.inputLayer.get(0).hiddenLayerWeight.get(0), 0);
+
+        // Insert neuron manually and see if synchronize(..) does recognize..
+        Neuron<String> manuallyInsertedNeuron = new Neuron<>("!");
+
+        ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.add(manuallyInsertedNeuron);
+        ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayerWeight.add(0);
+
+        ai.synchronize("!");
+
+        assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.size(), 1);
+        assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.get(0).getData(), "!");
+        assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayerWeight.get(0), 0);
+
+        ai.finish();
+
+        ai.synchronize("Hallo");
+
+        assertEquals(ai.inputLayer.size(), 2);
+        assertEquals(ai.inputLayer.get(1).getData(), "Hallo");
+
+        ai.synchronize(",");
+
+        assertEquals(ai.inputLayer.get(1).hiddenLayer.size(), 1);
+        assertEquals(ai.inputLayer.get(1).hiddenLayer.get(0).getData(), ",");
+        assertEquals(ai.inputLayer.get(1).hiddenLayerWeight.get(0), 0);
+
+        ai.finish();
+
+        ai.synchronize("Hello ");
+
+        assertEquals(ai.inputLayer.size(), 2);
+        assertEquals(ai.inputLayer.get(0).getData(), "Hello ");
+
+        ai.synchronize("World");
+
+        assertEquals(ai.inputLayer.get(0).hiddenLayer.size(), 1);
+        assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).getData(), "World");
+        assertEquals(ai.inputLayer.get(0).hiddenLayerWeight.get(0), 0);
+
+        ai.synchronize("!");
+
+        assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.size(), 1);
+        assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.get(0).getData(), "!");
+        assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayerWeight.get(0), 0);
+
+        ai.synchronize(" ");
+
+        assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.get(0).hiddenLayer.size(), 1);
+        assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.get(0).hiddenLayer.get(0).getData(), " ");
+        assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.get(0).hiddenLayerWeight.get(0), 0);
+
+        ai.finish();
+
+        assertEquals(ai.inputLayer.size(), 2);
+
+        ai.synchronize("Hallo");
+
+        assertEquals(ai.inputLayer.size(), 2);
+        assertEquals(ai.inputLayer.get(1).getData(), "Hallo");
+
+        ai.synchronize("!");
+
+        assertEquals(ai.inputLayer.get(1).hiddenLayer.size(), 2);
+        assertEquals(ai.inputLayer.get(1).hiddenLayer.get(1).getData(), "!");
+        assertEquals(ai.inputLayer.get(1).hiddenLayerWeight.get(1), 0);
+
+        ai.finish();
+    }
 }
