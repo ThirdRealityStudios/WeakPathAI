@@ -1,18 +1,16 @@
 package io.thirdreality.project.weakpathai.test;
 
 import io.thirdreality.project.weakpathai.core.AI;
-import io.thirdreality.project.weakpathai.core.ComparableData;
 import io.thirdreality.project.weakpathai.core.Equalable;
 import io.thirdreality.project.weakpathai.core.Neuron;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AITest
 {
     private Neuron<String> n;
+    private AI<String> ai;
 
     @BeforeEach
     private void init()
@@ -61,26 +59,55 @@ public class AITest
 
         assertEquals(n3.hiddenLayer.size(), 1);
         assertEquals(n3.hiddenLayerWeight.size(), 1);
-    }
-
-    @Test
-    public void testFire()
-    {
-        AI<String> ai = new AI<>();
 
         Equalable<String> equalable = new Equalable<String>()
         {
             @Override
             public boolean equals(String o0, String o1)
             {
-                return o0.equals(o1);
+                return o0.equals(o1) && o1.equals(o0);
             }
         };
 
-        String output = ai.fire(equalable, "1+1");
+        ai = new AI<>(equalable);
+    }
+
+    @Test
+    public void testFire()
+    {
+        String output = ai.fire("1+1");
 
         System.out.println("Output: " + output);
 
         assertEquals("2", output);
+    }
+
+    @Test
+    public void testSynchronize()
+    {
+        assertEquals(ai.inputLayer.size(), 0);
+
+        ai.synchronize("Hi");
+
+        assertEquals(ai.inputLayer.size(), 1);
+        assertEquals(ai.inputLayer.get(0).getData(), "Hi");
+
+        ai.synchronize(",");
+
+        assertEquals(ai.inputLayer.get(0).hiddenLayer.size(), 1);
+        assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).getData(), ",");
+        assertEquals(ai.inputLayer.get(0).hiddenLayerWeight.get(0), 0);
+
+        // Insert neuron manually and see if synchronize(..) does recognize..
+        Neuron<String> manuallyInsertedNeuron = new Neuron<>("a");
+
+        ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.add(manuallyInsertedNeuron);
+        ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayerWeight.add(0);
+
+        ai.synchronize("a");
+
+        assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.size(), 1);
+        assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.get(0).getData(), "a");
+        assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayerWeight.get(0), 0);
     }
 }
