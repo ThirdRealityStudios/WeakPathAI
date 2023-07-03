@@ -1,13 +1,16 @@
 package io.thirdreality.project.weakpathai.test;
 
+import io.thirdreality.project.weakpathai.core.AI;
 import io.thirdreality.project.weakpathai.core.ComparableData;
 import io.thirdreality.project.weakpathai.core.Equalable;
 import io.thirdreality.project.weakpathai.core.Neuron;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import org.junit.jupiter.api.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class NeuronTest
+public class AITest
 {
     private Neuron<String> n;
 
@@ -63,7 +66,18 @@ public class NeuronTest
     @Test
     public void testFire()
     {
-        String output = n.fire();
+        AI<String> ai = new AI<>();
+
+        Equalable<String> equalable = new Equalable<String>()
+        {
+            @Override
+            public boolean equals(String o0, String o1)
+            {
+                return o0.equals(o1);
+            }
+        };
+
+        String output = ai.fire(equalable, "1+1");
 
         System.out.println("Output: " + output);
 

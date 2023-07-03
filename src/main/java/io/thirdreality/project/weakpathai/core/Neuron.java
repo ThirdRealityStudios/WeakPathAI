@@ -6,12 +6,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class Neuron<Datatype>
 {
-    private final ComparableData<Datatype> data;
+    private final Datatype data;
 
     public ArrayList<Neuron<Datatype>> hiddenLayer = new ArrayList<>();
     public ArrayList<Integer> hiddenLayerWeight = new ArrayList<>();
 
-    public Neuron(ComparableData<Datatype> data)
+    public Neuron(Datatype data)
     {
         this.data = data;
     }
@@ -25,7 +25,7 @@ public class Neuron<Datatype>
      *
      * @return Output value from the output layer.
      */
-    public ComparableData<Datatype> fire()
+    public Datatype fire()
     {
         assertEquals(hiddenLayer.size(), hiddenLayerWeight.size());
 
@@ -52,7 +52,7 @@ public class Neuron<Datatype>
         return hiddenLayer.get(heaviestNeuron).fire();
     }
 
-    public Neuron<Datatype> add(ComparableData<Datatype> output, Integer weight)
+    public Neuron<Datatype> add(Datatype output, Integer weight)
     {
         Neuron<Datatype> neuron = new Neuron<>(output);
 
@@ -64,7 +64,7 @@ public class Neuron<Datatype>
         return neuron;
     }
 
-    public ComparableData<Datatype> getData()
+    public Datatype getData()
     {
         return data;
     }

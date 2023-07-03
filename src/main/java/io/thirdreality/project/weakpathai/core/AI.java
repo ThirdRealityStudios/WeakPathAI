@@ -32,16 +32,16 @@ public class AI<Datatype>
      *
      * @return null if the AI has no idea. Otherwise an output.
      */
-    public Datatype fire(ComparableData<Datatype> input)
+    public Datatype fire(Equalable equalsQuery, Datatype input)
     {
         // TODO Find neuron that matches the input most (not 100% but like 98%) => Override equals(..) in each Datatype!
 
-        for(Neuron n : inputLayer)
+        for(Neuron<Datatype> n : inputLayer)
         {
             // Will fire the first neuron that matches this neuron (regard thresholds).
-            if(n.getData().equals(input))
+            if(equalsQuery.equals(n.getData(), input))
             {
-                n.fire();
+                return n.fire();
             }
         }
 
