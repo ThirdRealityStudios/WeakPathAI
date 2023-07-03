@@ -22,7 +22,7 @@ public class PlayerTest
 
         w.collider[2][0] = true;
         w.collider[2][5] = true;
-        w.collider[2][6] = true;
+        w.collider[2][7] = true;
 
         w.collider[3][1] = true;
         w.collider[3][4] = true;
@@ -47,7 +47,7 @@ public class PlayerTest
     }
 
     @Test
-    public void testGetEnvironment()
+    public void testGetEnvironment0()
     {
         Player p = new Player(w);
 
@@ -66,7 +66,52 @@ public class PlayerTest
 
         assertFalse(environment[2][0]);
         assertTrue(environment[2][1]);
-        assertTrue(environment[2][2]);
+        assertFalse(environment[2][2]);
+    }
 
+    @Test
+    public void testGetEnvironment1()
+    {
+        Player p = new Player(w);
+
+        p.x = 6;
+        p.y = 1;
+
+        boolean[][] environment = p.getEnvironment().collider;
+
+        assertTrue(environment[0][0]);
+        assertFalse(environment[1][0]);
+        assertTrue(environment[2][0]);
+
+        assertFalse(environment[0][1]);
+        assertFalse(environment[1][1]);
+        assertFalse(environment[2][1]);
+
+        assertFalse(environment[0][2]);
+        assertTrue(environment[1][2]);
+        assertFalse(environment[2][2]);
+    }
+
+    @Test
+    public void testGetEnvironment2()
+    {
+        Player p = new Player(w);
+
+        p.x = 4;
+        p.y = 6;
+
+        boolean[][] environment = p.getEnvironment().collider;
+
+        assertTrue(environment[0][0]);
+        assertTrue(environment[1][0]);
+        assertFalse(environment[2][0]);
+
+        assertFalse(environment[0][1]);
+        assertTrue(environment[1][1]);
+        assertFalse(environment[2][1]);
+
+        assertFalse(environment[0][2]);
+        assertTrue(environment[1][2]);
+        assertTrue(environment[2][2]);
     }
 }
