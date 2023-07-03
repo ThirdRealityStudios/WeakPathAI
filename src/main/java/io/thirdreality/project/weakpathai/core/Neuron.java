@@ -35,7 +35,14 @@ public class Neuron<Datatype>
         }
         else if(hiddenLayer.size() == 1)
         {
-            return hiddenLayer.get(0).data;
+            if(hiddenLayer.get(0).hiddenLayer.isEmpty())
+            {
+                return hiddenLayer.get(0).data;
+            }
+            else
+            {
+                return hiddenLayer.get(0).fire();
+            }
         }
 
         int heaviestNeuron = 0;
