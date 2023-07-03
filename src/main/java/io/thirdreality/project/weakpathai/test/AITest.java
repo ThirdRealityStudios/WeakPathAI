@@ -32,8 +32,8 @@ public class AITest
         String input = "1+1",
                 outputExpected = "2";
 
-        ai.synchronize(input);
-        ai.synchronize(outputExpected);
+        ai.synchronize(input, 0);
+        ai.synchronize(outputExpected, 0);
 
         String output = ai.fire(input);
 
@@ -47,9 +47,9 @@ public class AITest
         String input = "1+1",
                 outputExpected = "2";
 
-        ai.synchronize(input);
-        ai.synchronize("*");
-        ai.synchronize(outputExpected);
+        ai.synchronize(input, 0);
+        ai.synchronize("*", 0);
+        ai.synchronize(outputExpected, 0);
 
         String output = ai.fire(input);
 
@@ -60,15 +60,15 @@ public class AITest
     @Test
     public void testFire2()
     {
-        ai.synchronize("1+1");
-        ai.synchronize("*");
-        ai.synchronize("2");
+        ai.synchronize("1+1", 0);
+        ai.synchronize("*", 0);
+        ai.synchronize("2", 0);
 
         ai.finish();
 
-        ai.synchronize("1+1");
-        ai.synchronize("*");
-        ai.synchronize("Wrong result");
+        ai.synchronize("1+1", 0);
+        ai.synchronize("*", 0);
+        ai.synchronize("Wrong result", 0);
 
         String output = ai.fire("1+1");
 
@@ -78,15 +78,15 @@ public class AITest
     @Test
     public void testFire3()
     {
-        ai.synchronize("1+1");
-        ai.synchronize("*");
-        ai.synchronize("2");
+        ai.synchronize("1+1", 0);
+        ai.synchronize("*", 0);
+        ai.synchronize("2", 0);
 
         ai.finish();
 
-        ai.synchronize("1+1");
-        ai.synchronize("*");
-        ai.synchronize("Wrong result");
+        ai.synchronize("1+1", 0);
+        ai.synchronize("*", 0);
+        ai.synchronize("Wrong result", 0);
 
         // Change weight of first neuron after "*" to 1
         // (which is greater than of the neuron with the value "Wrong result"),
@@ -100,16 +100,44 @@ public class AITest
     }
 
     @Test
-    public void testSynchronize()
+    public void testFire4()
+    {
+        ai.synchronize("1+1", 0);
+        ai.synchronize("=", 1);
+        ai.synchronize("0,5+0,5", 1);
+        ai.synchronize("=", 0);
+        ai.synchronize("2", 0);
+
+        ai.finish();
+
+        ai.synchronize("1+1", 0);
+        ai.synchronize("=", 0);
+        ai.synchronize("1,5", 0);
+
+        ai.finish();
+
+        ai.synchronize("1+1", 0);
+        ai.synchronize("=", 1);
+        ai.synchronize("1+1", 1);
+        ai.synchronize("=", 1);
+        ai.synchronize("2", 1);
+
+        String output = ai.fire("1+1");
+
+        assertEquals(output, "2");
+    }
+
+    @Test
+    public void testSynchronize0()
     {
         assertEquals(ai.inputLayer.size(), 0);
 
-        ai.synchronize("Hi");
+        ai.synchronize("Hi", 0);
 
         assertEquals(ai.inputLayer.size(), 1);
         assertEquals(ai.inputLayer.get(0).getData(), "Hi");
 
-        ai.synchronize(",");
+        ai.synchronize(",", 0);
 
         assertEquals(ai.inputLayer.get(0).hiddenLayer.size(), 1);
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).getData(), ",");
@@ -121,7 +149,7 @@ public class AITest
         ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.add(manuallyInsertedNeuron);
         ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayerWeight.add(0);
 
-        ai.synchronize("a");
+        ai.synchronize("a", 0);
 
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.size(), 1);
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.get(0).getData(), "a");
@@ -129,16 +157,54 @@ public class AITest
     }
 
     @Test
+    public void testSynchronize1()
+    {
+        // weight will have no effect as there is no
+        // memory or variable for such "weights" in the input layer (no test required,
+        // just to mention here)..
+        boolean inputLayerAffected = !ai.synchronize("Hi", 2);
+        assertTrue(inputLayerAffected);
+
+        // Now the weight has an effect and can be tested,
+        // as synchronize(..) works in the hidden layer now..
+        boolean hiddenLayerAffected = ai.synchronize(",", 2);
+        assertEquals(ai.inputLayer.get(0).hiddenLayerWeight.get(0), 2);
+        assertTrue(hiddenLayerAffected);
+
+        // Giving a negative weight to a neuron is impossible,
+        // as it is simply forbidden.
+        // The neuron will have the weight 0 after being synchronized.
+        ai.synchronize(" ", -2);
+        assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayerWeight.get(0), 0);
+    }
+
+    @Test
+    public void testSynchronize2()
+    {
+        testSynchronize1();
+
+        ai.finish();
+
+        ai.synchronize("Hi", 0);
+
+        // Because in testSynchronize1() the "," neuron already had the
+        // weight value 2, the next weight value will be 4:
+        ai.synchronize(",", 2);
+
+        assertEquals(ai.inputLayer.get(0).hiddenLayerWeight.get(0), 4);
+    }
+
+    @Test
     public void testFinish()
     {
         assertEquals(ai.inputLayer.size(), 0);
 
-        ai.synchronize("Hello ");
+        ai.synchronize("Hello ", 0);
 
         assertEquals(ai.inputLayer.size(), 1);
         assertEquals(ai.inputLayer.get(0).getData(), "Hello ");
 
-        ai.synchronize("World");
+        ai.synchronize("World", 0);
 
         assertEquals(ai.inputLayer.get(0).hiddenLayer.size(), 1);
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).getData(), "World");
@@ -150,7 +216,7 @@ public class AITest
         ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.add(manuallyInsertedNeuron);
         ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayerWeight.add(0);
 
-        ai.synchronize("!");
+        ai.synchronize("!", 0);
 
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.size(), 1);
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.get(0).getData(), "!");
@@ -158,12 +224,12 @@ public class AITest
 
         ai.finish();
 
-        ai.synchronize("Hallo");
+        ai.synchronize("Hallo", 0);
 
         assertEquals(ai.inputLayer.size(), 2);
         assertEquals(ai.inputLayer.get(1).getData(), "Hallo");
 
-        ai.synchronize(",");
+        ai.synchronize(",", 0);
 
         assertEquals(ai.inputLayer.get(1).hiddenLayer.size(), 1);
         assertEquals(ai.inputLayer.get(1).hiddenLayer.get(0).getData(), ",");
@@ -171,24 +237,24 @@ public class AITest
 
         ai.finish();
 
-        ai.synchronize("Hello ");
+        ai.synchronize("Hello ", 0);
 
         assertEquals(ai.inputLayer.size(), 2);
         assertEquals(ai.inputLayer.get(0).getData(), "Hello ");
 
-        ai.synchronize("World");
+        ai.synchronize("World", 0);
 
         assertEquals(ai.inputLayer.get(0).hiddenLayer.size(), 1);
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).getData(), "World");
         assertEquals(ai.inputLayer.get(0).hiddenLayerWeight.get(0), 0);
 
-        ai.synchronize("!");
+        ai.synchronize("!", 0);
 
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.size(), 1);
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.get(0).getData(), "!");
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayerWeight.get(0), 0);
 
-        ai.synchronize(" ");
+        ai.synchronize(" ", 0);
 
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.get(0).hiddenLayer.size(), 1);
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.get(0).hiddenLayer.get(0).getData(), " ");
@@ -198,12 +264,12 @@ public class AITest
 
         assertEquals(ai.inputLayer.size(), 2);
 
-        ai.synchronize("Hallo");
+        ai.synchronize("Hallo", 0);
 
         assertEquals(ai.inputLayer.size(), 2);
         assertEquals(ai.inputLayer.get(1).getData(), "Hallo");
 
-        ai.synchronize("!");
+        ai.synchronize("!", 0);
 
         assertEquals(ai.inputLayer.get(1).hiddenLayer.size(), 2);
         assertEquals(ai.inputLayer.get(1).hiddenLayer.get(1).getData(), "!");
