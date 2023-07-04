@@ -1,5 +1,7 @@
 package io.thirdreality.project.ai.neuron;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,14 +38,7 @@ public abstract class Neuron<Datatype> implements Runnable
         }
         else if(hiddenLayer.size() == 1)
         {
-            if(hiddenLayer.get(0).hiddenLayer.isEmpty())
-            {
-                return hiddenLayer.get(0).data;
-            }
-            else
-            {
-                return hiddenLayer.get(0).fire();
-            }
+            return hiddenLayer.get(0).fire();
         }
 
         int heaviestNeuron = 0;
