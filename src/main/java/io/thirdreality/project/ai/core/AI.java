@@ -1,8 +1,8 @@
-package io.thirdreality.project.weakpathai.core;
+package io.thirdreality.project.ai.core;
 
-import javax.xml.crypto.Data;
+import io.thirdreality.project.ai.neuron.Neuron;
+
 import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -26,11 +26,11 @@ public class AI<Datatype>
 
     private Neuron<Datatype> syn = null;
 
-    public AI(Equalable equalsQuery)
+    public AI(Equalable<Datatype> equalsMethod)
     {
         inputLayer = new ArrayList<>();
 
-        this.equalsQuery = equalsQuery;
+        this.equalsQuery = equalsMethod;
     }
 
     /**
@@ -63,18 +63,18 @@ public class AI<Datatype>
      * the beginning,
      * so from the input layer.
      *
-     * @param data Data to add or set in the corresponding neuron.
+     * @param newNeuron Data to add or set in the corresponding neuron.
      * @param weight Weight to add or subtract (neuron weight will never go below zero!)
      * @return 'true' if a hidden layer neuron was synchronized and 'false' if a input layer neuron was synchronized.
      */
-    public boolean synchronize(Datatype data, Integer weight)
+    public boolean synchronize(Neuron newNeuron, Integer weight)
     {
         // If to look in the input layer for a neuron.
         if(syn == null)
         {
             for(Neuron<Datatype> n : inputLayer)
             {
-                if(equalsQuery.equals(data, n.getData()))
+                if(equalsQuery.equals(newNeuron.getData(), n.getData()))
                 {
                     syn = n; // neuron found in the input layer.
 
@@ -85,7 +85,7 @@ public class AI<Datatype>
             // If there was no neuron in the input layer, create one there..
             if(syn == null)
             {
-                syn = new Neuron<Datatype>(data);
+                syn = newNeuron;
 
                 inputLayer.add(syn);
             }
@@ -102,7 +102,7 @@ public class AI<Datatype>
         {
             n = syn.hiddenLayer.get(i);
 
-            if(equalsQuery.equals(data, n.getData()))
+            if(equalsQuery.equals(newNeuron.getData(), n.getData()))
             {
                 // synchronize neuron with added weight:
                 syn.hiddenLayerWeight.set(i, Math.max(0, syn.hiddenLayerWeight.get(i) + weight));
@@ -115,8 +115,6 @@ public class AI<Datatype>
 
         // If there was no neuron in the hidden layer, create one there..
         assertTrue(syn != null);
-
-        Neuron newNeuron = new Neuron<Datatype>(data);
 
         syn.hiddenLayer.add(newNeuron);
         syn.hiddenLayerWeight.add(Math.max(0, weight));

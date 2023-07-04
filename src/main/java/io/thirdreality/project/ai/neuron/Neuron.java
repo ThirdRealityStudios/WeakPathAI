@@ -1,10 +1,9 @@
-package io.thirdreality.project.weakpathai.core;
+package io.thirdreality.project.ai.neuron;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class Neuron<Datatype>
+public abstract class Neuron<Datatype> implements Runnable
 {
     private final Datatype data;
 
@@ -28,6 +27,8 @@ public class Neuron<Datatype>
     public Datatype fire()
     {
         assertEquals(hiddenLayer.size(), hiddenLayerWeight.size());
+
+        run();
 
         if(hiddenLayer.isEmpty())
         {
@@ -59,17 +60,15 @@ public class Neuron<Datatype>
         return hiddenLayer.get(heaviestNeuron).fire();
     }
 
-    public Neuron<Datatype> add(Datatype output, Integer weight)
+    public void add(Neuron neuron, Integer weight)
     {
-        Neuron<Datatype> neuron = new Neuron<>(output);
-
         hiddenLayer.add(neuron);
         hiddenLayerWeight.add(weight);
 
         assertEquals(hiddenLayer.size(), hiddenLayerWeight.size());
-
-        return neuron;
     }
+
+    public abstract void run();
 
     public Datatype getData()
     {

@@ -1,8 +1,9 @@
-package io.thirdreality.project.weakpathai.test;
+package io.thirdreality.project.ai.test;
 
-import io.thirdreality.project.weakpathai.core.AI;
-import io.thirdreality.project.weakpathai.core.Equalable;
-import io.thirdreality.project.weakpathai.core.Neuron;
+import io.thirdreality.project.ai.core.AI;
+import io.thirdreality.project.ai.core.Equalable;
+import io.thirdreality.project.ai.neuron.ConsoleNeuron;
+import io.thirdreality.project.ai.neuron.Neuron;
 
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,8 +33,8 @@ public class AITest
         String input = "1+1",
                 outputExpected = "2";
 
-        ai.synchronize(input, 0);
-        ai.synchronize(outputExpected, 0);
+        ai.synchronize(new ConsoleNeuron(input), 0);
+        ai.synchronize(new ConsoleNeuron(outputExpected), 0);
 
         String output = ai.fire(input);
 
@@ -47,9 +48,9 @@ public class AITest
         String input = "1+1",
                 outputExpected = "2";
 
-        ai.synchronize(input, 0);
-        ai.synchronize("*", 0);
-        ai.synchronize(outputExpected, 0);
+        ai.synchronize(new ConsoleNeuron(input), 0);
+        ai.synchronize(new ConsoleNeuron("*"), 0);
+        ai.synchronize(new ConsoleNeuron(outputExpected), 0);
 
         String output = ai.fire(input);
 
@@ -60,15 +61,15 @@ public class AITest
     @Test
     public void testFire2()
     {
-        ai.synchronize("1+1", 0);
-        ai.synchronize("*", 0);
-        ai.synchronize("2", 0);
+        ai.synchronize(new ConsoleNeuron("1+1"), 0);
+        ai.synchronize(new ConsoleNeuron("*"), 0);
+        ai.synchronize(new ConsoleNeuron("2"), 0);
 
         ai.finish();
 
-        ai.synchronize("1+1", 0);
-        ai.synchronize("*", 0);
-        ai.synchronize("Wrong result", 0);
+        ai.synchronize(new ConsoleNeuron("1+1"), 0);
+        ai.synchronize(new ConsoleNeuron("*"), 0);
+        ai.synchronize(new ConsoleNeuron("Wrong result"), 0);
 
         String output = ai.fire("1+1");
 
@@ -78,15 +79,15 @@ public class AITest
     @Test
     public void testFire3()
     {
-        ai.synchronize("1+1", 0);
-        ai.synchronize("*", 0);
-        ai.synchronize("2", 0);
+        ai.synchronize(new ConsoleNeuron("1+1"), 0);
+        ai.synchronize(new ConsoleNeuron("*"), 0);
+        ai.synchronize(new ConsoleNeuron("2"), 0);
 
         ai.finish();
 
-        ai.synchronize("1+1", 0);
-        ai.synchronize("*", 0);
-        ai.synchronize("Wrong result", 0);
+        ai.synchronize(new ConsoleNeuron("1+1"), 0);
+        ai.synchronize(new ConsoleNeuron("*"), 0);
+        ai.synchronize(new ConsoleNeuron("Wrong result"), 0);
 
         // Change weight of first neuron after "*" to 1
         // (which is greater than of the neuron with the value "Wrong result"),
@@ -102,25 +103,25 @@ public class AITest
     @Test
     public void testFire4()
     {
-        ai.synchronize("1+1", 0);
-        ai.synchronize("=", 1);
-        ai.synchronize("0,5+0,5", 1);
-        ai.synchronize("=", 0);
-        ai.synchronize("2", 0);
+        ai.synchronize(new ConsoleNeuron("1+1"), 0);
+        ai.synchronize(new ConsoleNeuron("="), 1);
+        ai.synchronize(new ConsoleNeuron("0,5+0,5"), 1);
+        ai.synchronize(new ConsoleNeuron("="), 0);
+        ai.synchronize(new ConsoleNeuron("2"), 0);
 
         ai.finish();
 
-        ai.synchronize("1+1", 0);
-        ai.synchronize("=", 0);
-        ai.synchronize("1,5", 0);
+        ai.synchronize(new ConsoleNeuron("1+1"), 0);
+        ai.synchronize(new ConsoleNeuron("="), 0);
+        ai.synchronize(new ConsoleNeuron("1,5"), 0);
 
         ai.finish();
 
-        ai.synchronize("1+1", 0);
-        ai.synchronize("=", 1);
-        ai.synchronize("1+1", 1);
-        ai.synchronize("=", 1);
-        ai.synchronize("2", 1);
+        ai.synchronize(new ConsoleNeuron("1+1"), 0);
+        ai.synchronize(new ConsoleNeuron("="), 1);
+        ai.synchronize(new ConsoleNeuron("1+1"), 1);
+        ai.synchronize(new ConsoleNeuron("="), 1);
+        ai.synchronize(new ConsoleNeuron("2"), 1);
 
         String output = ai.fire("1+1");
 
@@ -132,24 +133,24 @@ public class AITest
     {
         assertEquals(ai.inputLayer.size(), 0);
 
-        ai.synchronize("Hi", 0);
+        ai.synchronize(new ConsoleNeuron("Hi"), 0);
 
         assertEquals(ai.inputLayer.size(), 1);
         assertEquals(ai.inputLayer.get(0).getData(), "Hi");
 
-        ai.synchronize(",", 0);
+        ai.synchronize(new ConsoleNeuron(","), 0);
 
         assertEquals(ai.inputLayer.get(0).hiddenLayer.size(), 1);
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).getData(), ",");
         assertEquals(ai.inputLayer.get(0).hiddenLayerWeight.get(0), 0);
 
         // Insert neuron manually and see if synchronize(..) does recognize..
-        Neuron<String> manuallyInsertedNeuron = new Neuron<>("a");
+        Neuron<String> manuallyInsertedNeuron = new ConsoleNeuron("a");
 
         ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.add(manuallyInsertedNeuron);
         ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayerWeight.add(0);
 
-        ai.synchronize("a", 0);
+        ai.synchronize(new ConsoleNeuron("a"), 0);
 
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.size(), 1);
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.get(0).getData(), "a");
@@ -162,19 +163,19 @@ public class AITest
         // weight will have no effect as there is no
         // memory or variable for such "weights" in the input layer (no test required,
         // just to mention here)..
-        boolean inputLayerAffected = !ai.synchronize("Hi", 2);
+        boolean inputLayerAffected = !ai.synchronize(new ConsoleNeuron("Hi"), 2);
         assertTrue(inputLayerAffected);
 
         // Now the weight has an effect and can be tested,
         // as synchronize(..) works in the hidden layer now..
-        boolean hiddenLayerAffected = ai.synchronize(",", 2);
+        boolean hiddenLayerAffected = ai.synchronize(new ConsoleNeuron(","), 2);
         assertEquals(ai.inputLayer.get(0).hiddenLayerWeight.get(0), 2);
         assertTrue(hiddenLayerAffected);
 
         // Giving a negative weight to a neuron is impossible,
         // as it is simply forbidden.
         // The neuron will have the weight 0 after being synchronized.
-        ai.synchronize(" ", -2);
+        ai.synchronize(new ConsoleNeuron(" "), -2);
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayerWeight.get(0), 0);
     }
 
@@ -185,11 +186,11 @@ public class AITest
 
         ai.finish();
 
-        ai.synchronize("Hi", 0);
+        ai.synchronize(new ConsoleNeuron("Hi"), 0);
 
         // Because in testSynchronize1() the "," neuron already had the
         // weight value 2, the next weight value will be 4:
-        ai.synchronize(",", 2);
+        ai.synchronize(new ConsoleNeuron(","), 2);
 
         assertEquals(ai.inputLayer.get(0).hiddenLayerWeight.get(0), 4);
     }
@@ -199,24 +200,24 @@ public class AITest
     {
         assertEquals(ai.inputLayer.size(), 0);
 
-        ai.synchronize("Hello ", 0);
+        ai.synchronize(new ConsoleNeuron("Hello "), 0);
 
         assertEquals(ai.inputLayer.size(), 1);
         assertEquals(ai.inputLayer.get(0).getData(), "Hello ");
 
-        ai.synchronize("World", 0);
+        ai.synchronize(new ConsoleNeuron("World"), 0);
 
         assertEquals(ai.inputLayer.get(0).hiddenLayer.size(), 1);
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).getData(), "World");
         assertEquals(ai.inputLayer.get(0).hiddenLayerWeight.get(0), 0);
 
         // Insert neuron manually and see if synchronize(..) does recognize..
-        Neuron<String> manuallyInsertedNeuron = new Neuron<>("!");
+        Neuron<String> manuallyInsertedNeuron = new ConsoleNeuron("!");
 
         ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.add(manuallyInsertedNeuron);
         ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayerWeight.add(0);
 
-        ai.synchronize("!", 0);
+        ai.synchronize(new ConsoleNeuron("!"), 0);
 
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.size(), 1);
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.get(0).getData(), "!");
@@ -224,12 +225,12 @@ public class AITest
 
         ai.finish();
 
-        ai.synchronize("Hallo", 0);
+        ai.synchronize(new ConsoleNeuron("Hallo"), 0);
 
         assertEquals(ai.inputLayer.size(), 2);
         assertEquals(ai.inputLayer.get(1).getData(), "Hallo");
 
-        ai.synchronize(",", 0);
+        ai.synchronize(new ConsoleNeuron(","), 0);
 
         assertEquals(ai.inputLayer.get(1).hiddenLayer.size(), 1);
         assertEquals(ai.inputLayer.get(1).hiddenLayer.get(0).getData(), ",");
@@ -237,24 +238,24 @@ public class AITest
 
         ai.finish();
 
-        ai.synchronize("Hello ", 0);
+        ai.synchronize(new ConsoleNeuron("Hello "), 0);
 
         assertEquals(ai.inputLayer.size(), 2);
         assertEquals(ai.inputLayer.get(0).getData(), "Hello ");
 
-        ai.synchronize("World", 0);
+        ai.synchronize(new ConsoleNeuron("World"), 0);
 
         assertEquals(ai.inputLayer.get(0).hiddenLayer.size(), 1);
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).getData(), "World");
         assertEquals(ai.inputLayer.get(0).hiddenLayerWeight.get(0), 0);
 
-        ai.synchronize("!", 0);
+        ai.synchronize(new ConsoleNeuron("!"), 0);
 
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.size(), 1);
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.get(0).getData(), "!");
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayerWeight.get(0), 0);
 
-        ai.synchronize(" ", 0);
+        ai.synchronize(new ConsoleNeuron(" "), 0);
 
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.get(0).hiddenLayer.size(), 1);
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.get(0).hiddenLayer.get(0).getData(), " ");
@@ -264,12 +265,12 @@ public class AITest
 
         assertEquals(ai.inputLayer.size(), 2);
 
-        ai.synchronize("Hallo", 0);
+        ai.synchronize(new ConsoleNeuron("Hallo"), 0);
 
         assertEquals(ai.inputLayer.size(), 2);
         assertEquals(ai.inputLayer.get(1).getData(), "Hallo");
 
-        ai.synchronize("!", 0);
+        ai.synchronize(new ConsoleNeuron("!"), 0);
 
         assertEquals(ai.inputLayer.get(1).hiddenLayer.size(), 2);
         assertEquals(ai.inputLayer.get(1).hiddenLayer.get(1).getData(), "!");

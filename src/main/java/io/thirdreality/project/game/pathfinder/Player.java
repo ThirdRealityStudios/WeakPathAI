@@ -1,4 +1,4 @@
-package io.thirdreality.project.weakpathai.game;
+package io.thirdreality.project.game.pathfinder;
 
 public class Player
 {

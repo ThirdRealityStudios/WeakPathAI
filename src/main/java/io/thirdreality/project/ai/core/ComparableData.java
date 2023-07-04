@@ -1,4 +1,4 @@
-package io.thirdreality.project.weakpathai.core;
+package io.thirdreality.project.ai.core;
 
 /**
  * This class is a representation of a datatype.

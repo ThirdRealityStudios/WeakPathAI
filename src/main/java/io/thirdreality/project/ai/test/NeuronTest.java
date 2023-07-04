@@ -1,15 +1,15 @@
-package io.thirdreality.project.weakpathai.test;
+package io.thirdreality.project.ai.test;
 
-import io.thirdreality.project.weakpathai.core.ComparableData;
-import io.thirdreality.project.weakpathai.core.Equalable;
-import io.thirdreality.project.weakpathai.core.Neuron;
+import io.thirdreality.project.ai.core.Equalable;
+import io.thirdreality.project.ai.neuron.ConsoleNeuron;
+import io.thirdreality.project.ai.neuron.Neuron;
 
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class NeuronTest
 {
-    private Neuron<String> n;
+    private ConsoleNeuron n;
 
     @BeforeEach
     private void init()
@@ -25,36 +25,44 @@ public class NeuronTest
             }
         };
 
-        n = new Neuron<String>("1+1");
-
-        System.out.println("Input: " + n.getData());
+        n = new ConsoleNeuron("1+1");
 
         assertEquals(n.hiddenLayer.size(), 0);
         assertEquals(n.hiddenLayerWeight.size(), 0);
 
-        Neuron n0 = n.add("22", 0);
+        ConsoleNeuron n0 = new ConsoleNeuron("22");
+
+        n.add(n0, 0);
 
         assertEquals(n.hiddenLayer.size(), 1);
         assertEquals(n.hiddenLayerWeight.size(), 1);
 
-        Neuron n1 = n.add("hidden", 0);
+        ConsoleNeuron n1 = new ConsoleNeuron("hidden");
+
+        n.add(n1, 0);
 
         assertEquals(n.hiddenLayer.size(), 2);
         assertEquals(n.hiddenLayerWeight.size(), 2);
 
-        Neuron n2 = n.add("hidden", 0);
+        ConsoleNeuron n2 = new ConsoleNeuron("hidden");
+
+        n.add(n2, 0);
 
         assertEquals(n.hiddenLayer.size(), 3);
         assertEquals(n.hiddenLayerWeight.size(), 3);
 
-        Neuron n3 = n.add("22", 1);
+        ConsoleNeuron n3 = new ConsoleNeuron("22");
+
+        n.add(n3, 1);
 
         assertEquals(n.hiddenLayer.size(), 4);
         assertEquals(n.hiddenLayerWeight.size(), 4);
         assertEquals(n3.hiddenLayer.size(), 0);
         assertEquals(n3.hiddenLayerWeight.size(), 0);
 
-        n3.add("2", 0);
+        ConsoleNeuron n3_0 = new ConsoleNeuron("2");
+
+        n3.add(n3_0, 0);
 
         assertEquals(n3.hiddenLayer.size(), 1);
         assertEquals(n3.hiddenLayerWeight.size(), 1);
@@ -64,8 +72,6 @@ public class NeuronTest
     public void testFire()
     {
         String output = n.fire();
-
-        System.out.println("Output: " + output);
 
         assertEquals("2", output);
     }
