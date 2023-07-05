@@ -30,7 +30,7 @@ public class Main
 
         do
         {
-            System.out.print("Deine Eingabe: ");
+            System.out.print("Your input: ");
 
             input = s.nextLine();
 
