@@ -191,4 +191,37 @@ public class NeuronTest
         n1Copied.hiddenLayer.get(0).setData("whatever");
         assertNotEquals(n1Copied, rootOutputNeuronCopied.hiddenLayer.get(0).hiddenLayer.get(0)); // but also no deep equality (because of copying the underlying neuron of n1 and modifying its value).
     }
+
+    @Test
+    public void testEquals0()
+    {
+        initConsoleNeuron();
+
+        Neuron<String> n0 = new Neuron<>("2+2", action);
+        rootOutputNeuron.add(n0, 0);
+        assertEquals(rootOutputNeuron.hiddenLayer.size(), 1);
+        assertEquals(rootOutputNeuron.hiddenLayerWeight.size(), 1);
+
+        Neuron<String> n1 = new Neuron<String>("3+3", action);
+        n0.add(n1, 0);
+        assertEquals(n0.hiddenLayer.size(), 1);
+        assertEquals(n0.hiddenLayerWeight.size(), 1);
+
+        assertFalse(n0.equals(n1));
+
+        Neuron<String> rootOutputNeuronCopy = rootOutputNeuron.copy();
+
+        // Test equals(..) for the "root" neuron:
+        assertTrue(rootOutputNeuronCopy.equals(rootOutputNeuron));
+
+        // Now change an underlying neuron of 'rootOutputNeuron':
+        rootOutputNeuron.hiddenLayer.get(0).setData("Senseless text");
+
+        // Repeat the test for the root neuron:
+        assertFalse(rootOutputNeuronCopy.equals(rootOutputNeuron));
+
+        // Now set the neuron to null in the hidden layer of the root neuron and repeat the test (should still be false):
+        rootOutputNeuron.hiddenLayer.set(0, null);
+        assertFalse(rootOutputNeuronCopy.equals(rootOutputNeuron));
+    }
 }

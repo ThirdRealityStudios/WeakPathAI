@@ -166,6 +166,12 @@ public class Neuron<Datatype>
     @Override
     public boolean equals(Object o)
     {
+        // Make sure, that a "null" neuron does not cause a NullPointerException.
+        if(o == null)
+        {
+            return false;
+        }
+
         Neuron<Datatype> otherNeuron = (Neuron<Datatype>) o;
 
         if(otherNeuron.hiddenLayer.size() != hiddenLayer.size() || otherNeuron.hiddenLayerWeight.size() != hiddenLayerWeight.size())
