@@ -3,7 +3,6 @@ package io.thirdreality.project.ai.test;
 import java.util.*;
 
 import io.thirdreality.project.ai.core.AI;
-import io.thirdreality.project.ai.core.Equalable;
 import io.thirdreality.project.ai.neuron.Neuron;
 
 import org.junit.jupiter.api.*;
@@ -16,16 +15,7 @@ public class AITest
     @BeforeEach
     private void init()
     {
-        Equalable<String> equalable = new Equalable<String>()
-        {
-            @Override
-            public boolean equals(String o0, String o1)
-            {
-                return o0.equals(o1) && o1.equals(o0);
-            }
-        };
-
-        ai = new AI<>(equalable);
+        ai = new AI<>();
     }
 
     @Test

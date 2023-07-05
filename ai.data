@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="18.0.2-ea" class="java.beans.XMLDecoder">
+ <object class="io.thirdreality.project.ai.core.AI" id="AI0"/>
+<void class="io.thirdreality.project.ai.neuron.Neuron" id="Neuron0">
+ <void property="data">
+  <string>Cool</string>
+ </void>
+</void>
+<void class="io.thirdreality.project.ai.core.AI" id="Field0" method="getField">
+ <string>inputLayer</string>
+ <void id="ArrayList0" method="get">
+  <object idref="AI0"/>
+  <void method="add">
+   <object class="io.thirdreality.project.ai.neuron.Neuron">
+    <void property="data">
+     <string>asd</string>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="io.thirdreality.project.ai.neuron.Neuron" id="Neuron1">
+    <void property="data">
+     <string>Whats uo?</string>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object idref="Neuron0"/>
+  </void>
+  <void method="add">
+   <object class="io.thirdreality.project.ai.neuron.Neuron">
+    <void property="data">
+     <string>Hey</string>
+    </void>
+   </object>
+  </void>
+ </void>
+</void>
+<void idref="ArrayList0"/>
+<void class="io.thirdreality.project.ai.neuron.Neuron" id="Neuron2">
+ <void property="data">
+  <string>Nice to hear</string>
+ </void>
+</void>
+<void class="io.thirdreality.project.ai.neuron.Neuron" id="Field1" method="getField">
+ <string>hiddenLayerWeight</string>
+ <void id="ArrayList1" method="get">
+  <object idref="Neuron0"/>
+  <void method="add">
+   <int>1</int>
+  </void>
+ </void>
+</void>
+<void idref="ArrayList1"/>
+<void class="io.thirdreality.project.ai.neuron.Neuron" id="Neuron3">
+ <void property="data">
+  <string>How are you?</string>
+ </void>
+</void>
+<void class="io.thirdreality.project.ai.neuron.Neuron" id="Field2" method="getField">
+ <string>hiddenLayer</string>
+ <void id="ArrayList2" method="get">
+  <object idref="Neuron0"/>
+  <void method="add">
+   <object idref="Neuron2"/>
+  </void>
+ </void>
+</void>
+<void idref="ArrayList2"/>
+<void class="io.thirdreality.project.ai.neuron.Neuron" id="Field3" method="getField">
+ <string>hiddenLayer</string>
+ <void id="ArrayList3" method="get">
+  <object idref="Neuron1"/>
+  <void method="add">
+   <object idref="Neuron3"/>
+  </void>
+ </void>
+</void>
+<void idref="ArrayList3"/>
+<void class="io.thirdreality.project.ai.neuron.Neuron" id="Field4" method="getField">
+ <string>hiddenLayerWeight</string>
+ <void id="ArrayList4" method="get">
+  <object idref="Neuron1"/>
+  <void method="add">
+   <int>1</int>
+  </void>
+ </void>
+</void>
+<void idref="ArrayList4"/>
+</java>

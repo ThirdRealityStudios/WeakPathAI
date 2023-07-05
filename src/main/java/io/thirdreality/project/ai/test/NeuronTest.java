@@ -1,6 +1,5 @@
 package io.thirdreality.project.ai.test;
 
-import io.thirdreality.project.ai.core.Equalable;
 import io.thirdreality.project.ai.neuron.Neuron;
 
 import io.thirdreality.project.ai.neuron.Runnable;
@@ -15,17 +14,6 @@ public class NeuronTest
 
     private void initConsoleNeuron()
     {
-        Equalable<String> e = new Equalable<>()
-        {
-            public boolean equals(String s0, String s1)
-            {
-                assertNotNull(s0);
-                assertNotNull(s1);
-
-                return s0.equals(s1) && s1.equals(s0);
-            }
-        };
-
         action = n ->
         {
             System.out.println(n.getData());

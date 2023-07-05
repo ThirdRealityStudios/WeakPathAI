@@ -1,10 +1,10 @@
 package io.thirdreality.project.ai.neuron;
 
-import javax.xml.crypto.Data;
+import java.io.Serializable;
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class Neuron<Datatype>
+public class Neuron<Datatype> implements Serializable
 {
     private Datatype data;
 
@@ -19,10 +19,18 @@ public class Neuron<Datatype>
      * @param data Data to save in this neuron.
      * @param action Action to call when fired.
      */
-    public Neuron(Datatype data, Runnable action)
+    public Neuron(Datatype data, Runnable<Datatype> action)
     {
         this.data = data;
         this.action = action;
+    }
+
+    public Neuron()
+    {
+        this.action = n ->
+        {
+
+        };
     }
 
     /**

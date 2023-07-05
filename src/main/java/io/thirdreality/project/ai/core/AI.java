@@ -2,6 +2,9 @@ package io.thirdreality.project.ai.core;
 
 import io.thirdreality.project.ai.neuron.Neuron;
 
+import javax.xml.stream.*;
+import javax.xml.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,23 +21,19 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @param <Datatype>
  */
-public class AI<Datatype>
+public class AI<Datatype> implements Serializable
 {
     public ArrayList<Neuron<Datatype>> inputLayer;
-
-    private Equalable equalsQuery;
 
     private Neuron<Datatype> syn = null;
 
     private ArrayList<Neuron<Datatype>> historyBuffer, history;
 
-    public AI(Equalable<Datatype> equalsMethod)
+    public AI()
     {
         inputLayer = new ArrayList<>();
 
         historyBuffer = new ArrayList<>();
-
-        this.equalsQuery = equalsMethod;
     }
 
     /**
@@ -51,7 +50,7 @@ public class AI<Datatype>
         {
             // TODO Find neuron that matches the input most (not 100% but like 98%)
             // Will fire the first neuron that matches this neuron (regard thresholds).
-            if(equalsQuery.equals(n.getData(), input))
+            if(n.getData().equals(input))
             {
                 return n.fire();
             }
@@ -78,7 +77,7 @@ public class AI<Datatype>
         {
             for(Neuron<Datatype> n : inputLayer)
             {
-                if(equalsQuery.equals(newNeuron.getData(), n.getData()))
+                if(newNeuron.getData().equals(n.getData()))
                 {
                     syn = n; // neuron found in the input layer.
 
@@ -112,7 +111,7 @@ public class AI<Datatype>
         {
             n = syn.hiddenLayer.get(i);
 
-            if(equalsQuery.equals(newNeuron.getData(), n.getData()))
+            if(newNeuron.getData().equals(n.getData()))
             {
                 // synchronize neuron with added weight:
                 syn.hiddenLayerWeight.set(i, Math.max(0, syn.hiddenLayerWeight.get(i) + weight));
