@@ -26,9 +26,13 @@ public class AI<Datatype>
 
     private Neuron<Datatype> syn = null;
 
+    private ArrayList<Neuron> historyBuffer, history;
+
     public AI(Equalable<Datatype> equalsMethod)
     {
         inputLayer = new ArrayList<>();
+
+        historyBuffer = new ArrayList<>();
 
         this.equalsQuery = equalsMethod;
     }
@@ -78,6 +82,9 @@ public class AI<Datatype>
                 {
                     syn = n; // neuron found in the input layer.
 
+                    // Remember neuron synchronized for latter query.
+                    historyBuffer.add(syn);
+
                     return false;
                 }
             }
@@ -86,6 +93,9 @@ public class AI<Datatype>
             if(syn == null)
             {
                 syn = newNeuron;
+
+                // Remember neuron synchronized for latter query.
+                historyBuffer.add(syn);
 
                 inputLayer.add(syn);
             }
@@ -109,6 +119,9 @@ public class AI<Datatype>
 
                 syn = n; // neuron found in the hidden layer of 'syn' neuron.
 
+                // Remember neuron synchronized for latter query.
+                historyBuffer.add(syn);
+
                 return true;
             }
         }
@@ -121,11 +134,29 @@ public class AI<Datatype>
 
         syn = newNeuron;
 
+        // Remember neuron synchronized for latter query.
+        historyBuffer.add(syn);
+
         return true;
     }
 
-    public void finish()
+    /**
+     * Closes or finishes the neuron synchronisation like a
+     * flush() call on a stream.
+     * If you re-use synchronize(..) after calling finish(),
+     * then you will start over again in the input layer
+     * when synchronizing neurons.
+     *
+     * @return Neurons synchronized with synchronize(..), whereas the last neuron is the deepest. The first neuron is in the input layer (index = 0).
+     */
+    public ArrayList<Neuron> finish()
     {
         syn = null;
+
+        history = historyBuffer;
+
+        historyBuffer = new ArrayList<>();
+
+        return history;
     }
 }
