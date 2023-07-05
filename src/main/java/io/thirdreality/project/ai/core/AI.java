@@ -157,6 +157,38 @@ public class AI<Datatype>
 
         historyBuffer = new ArrayList<>();
 
+        // Create more neurons in the network, based on the input of this session.
+        createPartialSolutions(historyBuffer);
+
         return history;
+    }
+
+    /**
+     * This method will create partial solutions from data fed with synchronize()
+     * after calling finish().
+     * The idea behind this method is not to step through the whole
+     * neural network if you already have put answers / data / solutions into the AI.
+     * To find these answers much quicker,
+     * each neuron is copied and linked to the input layer,
+     * including the hidden layer of each neuron.
+     * This process might be very slow,
+     * but on the other hand,
+     * the AI will learn much faster and can create a depth of the neuronal network
+     * by using the data input you have given with synchronize(..).
+     * Without this method,
+     * there will be much less depth in your AI or even no depth at all.
+     * By using this internal method in finish(),
+     * you can already produce a lot of information and neuronal nets without the need to explicitly
+     * feed the AI with data.
+     * So, in the end this method will create new and additional neurons in the network.
+     *
+     * Examples for senseful use:
+     * TODO Give examples with chat bot and finding a path.
+     *
+     * @param history History, returned by finish().
+     */
+    private void createPartialSolutions(ArrayList<Neuron> history)
+    {
+
     }
 }

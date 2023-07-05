@@ -1,4 +1,4 @@
-package io.thirdreality.project.game.pathfinder;
+package io.thirdreality.project.game.pathai;
 
 public class World
 {

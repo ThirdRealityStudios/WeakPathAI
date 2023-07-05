@@ -1,6 +1,6 @@
 package io.thirdreality.project.ai.test;
 
-import io.thirdreality.project.game.pathfinder.World;
+import io.thirdreality.project.game.pathai.World;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;

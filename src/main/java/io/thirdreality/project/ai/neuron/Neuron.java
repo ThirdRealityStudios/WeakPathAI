@@ -3,14 +3,22 @@ package io.thirdreality.project.ai.neuron;
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
-public abstract class Neuron<Datatype> implements Runnable
+public class Neuron<Datatype>
 {
-    private final Datatype data;
+    private Datatype data;
 
     public ArrayList<Neuron<Datatype>> hiddenLayer = new ArrayList<>();
     public ArrayList<Integer> hiddenLayerWeight = new ArrayList<>();
 
-    public Neuron(Datatype data)
+    private Runnable<Datatype> action;
+
+    public Neuron(Datatype data, Runnable action)
+    {
+        this.data = data;
+        this.action = action;
+    }
+
+    public void setData(Datatype data)
     {
         this.data = data;
     }
@@ -28,7 +36,10 @@ public abstract class Neuron<Datatype> implements Runnable
     {
         assertEquals(hiddenLayer.size(), hiddenLayerWeight.size());
 
-        run();
+        // 'action' always needs to be initialized for a neuron-specific action.
+        assertNotNull(action);
+
+        action.run(this);
 
         if(hiddenLayer.isEmpty())
         {
@@ -61,10 +72,43 @@ public abstract class Neuron<Datatype> implements Runnable
         assertEquals(hiddenLayer.size(), hiddenLayerWeight.size());
     }
 
-    public abstract void run();
-
     public Datatype getData()
     {
         return data;
+    }
+
+    /**
+     * Will run the given 'action' of the constructor for this neuron.
+     */
+    public void run()
+    {
+        action.run(this);
+    }
+
+    /**
+     * Copies this neuron,
+     * including its underlying neurons in the hidden layer.
+     * The copied neuron will then be 100% identical
+     * with this one including all the underlying neurons
+     * connected to this neuron.
+     * If you change the copy or the hidden layer of the copied neuron,
+     * this will have no effect on the original neuron and its hidden layer neurons.
+     * Hence,
+     * this copy() operation is very costly in performance
+     * but it can be used to reproduce information and
+     * use it somewhere else in the neuronal network.
+     *
+     * Sample use: AI.createPartialSolutions(..).
+     *
+     * @return Copied neuron.
+     */
+    public Neuron<Datatype> copy()
+    {
+        // 'action' always needs to be initialized for a neuron-specific action.
+        assertNotNull(action);
+
+        Neuron<Datatype> copied = new Neuron<Datatype>(getData(), action);
+
+        return copied;
     }
 }
