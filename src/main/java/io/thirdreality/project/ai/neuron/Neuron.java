@@ -1,7 +1,5 @@
 package io.thirdreality.project.ai.neuron;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 

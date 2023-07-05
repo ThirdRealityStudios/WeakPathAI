@@ -29,7 +29,11 @@ public class NeuronTest
 
         assertEquals(n.hiddenLayer.size(), 0);
         assertEquals(n.hiddenLayerWeight.size(), 0);
+    }
 
+    @Test
+    public void testFire()
+    {
         ConsoleNeuron n0 = new ConsoleNeuron("22");
 
         n.add(n0, 0);
@@ -66,13 +70,25 @@ public class NeuronTest
 
         assertEquals(n3.hiddenLayer.size(), 1);
         assertEquals(n3.hiddenLayerWeight.size(), 1);
-    }
 
-    @Test
-    public void testFire()
-    {
         String output = n.fire();
 
         assertEquals("2", output);
+    }
+
+    @Test
+    public void testAdd0()
+    {
+        n.add(new ConsoleNeuron("Hello"), 0);
+
+        assertEquals(1, n.hiddenLayer.size());
+        assertEquals("Hello", n.hiddenLayer.get(0).getData());
+        assertEquals(0, n.hiddenLayerWeight.get(0));
+
+        n.add(new ConsoleNeuron(","), 2);
+
+        assertEquals(2, n.hiddenLayer.size());
+        assertEquals(",", n.hiddenLayer.get(1).getData());
+        assertEquals(2, n.hiddenLayerWeight.get(1));
     }
 }
