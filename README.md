@@ -18,7 +18,9 @@ there is a generated HTML JavaDOC in the src folder.
 
 This program was briefly (!) tested for its functionalities.
 
-You can find and run the test methods in src/test/
+You can find and run the test methods in:
+
+> src/main/java/io/thirdreality/project/ai/test/
 
 # Chat Bot
 
@@ -26,7 +28,9 @@ For myself,
 
 I implemented a simple chatbot which can save its process in a
 
-file called "ai.save".
+file called 
+
+> ai.save
 
 The chatbot can be compiled and run in the Main.java file.
 
