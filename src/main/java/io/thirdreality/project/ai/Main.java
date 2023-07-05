@@ -36,6 +36,11 @@ public class Main
 
             System.out.println();
 
+            if("/exit".equals(input))
+            {
+                break;
+            }
+
             ai.synchronize(new ConsoleNeuron(input), 1);
             ai.finish();
 
@@ -43,7 +48,7 @@ public class Main
 
             System.out.println("AI: " + n + "\n");
         }
-        while(!"/exit".equals(input));
+        while(true);
 
         s.close();
     }
