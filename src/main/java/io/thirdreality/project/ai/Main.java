@@ -11,9 +11,24 @@ import java.util.Scanner;
 // then press Enter. You can now see whitespace characters in your code.
 public class Main
 {
+    private Equalable<String> e;
+    private Runnable<String> action;
+    private AI<String> ai;
+    private Scanner s;
+
     public static void main(String[] args)
     {
-        Equalable<String> e = new Equalable<>()
+        Main m = new Main();
+
+        while(true)
+        {
+            m.run();
+        }
+    }
+
+    public Main()
+    {
+        this.e = new Equalable<>()
         {
             @Override
             public boolean equals(String o0, String o1)
@@ -22,22 +37,23 @@ public class Main
             }
         };
 
-        Runnable<String> action = n ->
+        action = n ->
         {
             // Do nothing.
         };
 
-        AI<String> ai = new AI<>(e);
+        this.ai = new AI<String>(e);
 
-        String input = null;
+        this.s = new Scanner(System.in);
+    }
 
-        Scanner s = new Scanner(System.in);
-
-        do
+    public void run()
+    {
+        while(true)
         {
             System.out.print("Your input: ");
 
-            input = s.nextLine();
+            String input = s.nextLine();
 
             System.out.println();
 
@@ -47,14 +63,17 @@ public class Main
             }
 
             ai.synchronize(new Neuron<String>(input, action), 1);
-            ai.finish();
 
             String n = ai.fire(input);
 
-            System.out.println("AI: " + n + "\n");
-        }
-        while(true);
+            // If there is any unknown answer / information, create new neurons and try
+            // to sort some data in order to give a better answer next time.
+            if(n == null)
+            {
+                ai.finish();
+            }
 
-        s.close();
+            System.out.println("AI: " + (n == null ? "I don't know" : n) + "\n");
+        }
     }
 }

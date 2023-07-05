@@ -26,7 +26,7 @@ public class AI<Datatype>
 
     private Neuron<Datatype> syn = null;
 
-    private ArrayList<Neuron> historyBuffer, history;
+    private ArrayList<Neuron<Datatype>> historyBuffer, history;
 
     public AI(Equalable<Datatype> equalsMethod)
     {
@@ -149,7 +149,7 @@ public class AI<Datatype>
      *
      * @return Neurons synchronized with synchronize(..), whereas the last neuron is the deepest. The first neuron is in the input layer (index = 0).
      */
-    public ArrayList<Neuron> finish()
+    public ArrayList<Neuron<Datatype>> finish()
     {
         syn = null;
 
@@ -187,8 +187,15 @@ public class AI<Datatype>
      *
      * @param history History, returned by finish().
      */
-    private void createPartialSolutions(ArrayList<Neuron> history)
+    private void createPartialSolutions(ArrayList<Neuron<Datatype>> history)
     {
-
+        for(Neuron<Datatype> n : history)
+        {
+            if(!inputLayer.contains(n))
+            {
+                // TODO: Probably multiple neurons can exist with the same data value but with other networks in the input layer.
+                inputLayer.add(n.copy());
+            }
+        }
     }
 }

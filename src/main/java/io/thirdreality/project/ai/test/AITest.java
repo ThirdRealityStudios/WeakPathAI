@@ -224,7 +224,7 @@ public class AITest
         assertEquals("!", ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.get(0).getData());
         assertEquals(0, ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayerWeight.get(0));
 
-        ArrayList<Neuron> neuronHistory0 = ai.finish();
+        ArrayList<Neuron<String>> neuronHistory0 = ai.finish();
 
         assertEquals(3, neuronHistory0.size());
         assertEquals("Hello ", neuronHistory0.get(0).getData());
@@ -242,7 +242,7 @@ public class AITest
         assertEquals(",", ai.inputLayer.get(1).hiddenLayer.get(0).getData());
         assertEquals(0, ai.inputLayer.get(1).hiddenLayerWeight.get(0));
 
-        ArrayList<Neuron> neuronHistory1 = ai.finish();
+        ArrayList<Neuron<String>> neuronHistory1 = ai.finish();
 
         assertEquals(2, neuronHistory1.size());
         assertEquals("Hallo", neuronHistory1.get(0).getData());
@@ -271,7 +271,7 @@ public class AITest
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.get(0).hiddenLayer.get(0).getData(), " ");
         assertEquals(ai.inputLayer.get(0).hiddenLayer.get(0).hiddenLayer.get(0).hiddenLayerWeight.get(0), 0);
 
-        ArrayList<Neuron> neuronHistory2 = ai.finish();
+        ArrayList<Neuron<String>> neuronHistory2 = ai.finish();
 
         assertEquals(4, neuronHistory2.size());
         assertEquals("Hello ", neuronHistory2.get(0).getData());
@@ -292,7 +292,7 @@ public class AITest
         assertEquals(ai.inputLayer.get(1).hiddenLayer.get(1).getData(), "!");
         assertEquals(ai.inputLayer.get(1).hiddenLayerWeight.get(1), 0);
 
-        ArrayList<Neuron> neuronHistory3 = ai.finish();
+        ArrayList<Neuron<String>> neuronHistory3 = ai.finish();
 
         assertEquals(2, neuronHistory3.size());
         assertEquals("Hallo", neuronHistory3.get(0).getData());
