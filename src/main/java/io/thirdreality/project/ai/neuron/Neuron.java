@@ -153,12 +153,12 @@ public class Neuron<Datatype>
 
     /**
      * Evaluates deep equality by calling the
-     * equals(..) method of the data value and
-     * action object.
-     * There is NO guarantee that the underlying
-     * neurons of the hidden layer do also match
-     * as there is no evaluation due to performance
-     * reasons.
+     * equals(..) for all possible data of a neuron.
+     * Underlying neurons and hidden layer structures
+     * do also have to be deeply equal.
+     * Hence,
+     * the call to this method is highly expensive
+     * but it is normal for neural networks.
      *
      * @param o Neuron to compare (as an Object)
      * @return true if deeply equal. Otherwise false.
@@ -173,7 +173,7 @@ public class Neuron<Datatype>
             return false;
         }
 
-        // Check deep equality of the neurons referenced in the hidden layer.
+        // Check deep equality of the neurons referenced in the hidden layer and their hidden layer and so on..
         for(int i = 0; i < hiddenLayer.size(); i++)
         {
             Neuron<Datatype> n0 = hiddenLayer.get(i),
