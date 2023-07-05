@@ -2,8 +2,8 @@ package io.thirdreality.project.ai;
 
 import io.thirdreality.project.ai.core.AI;
 import io.thirdreality.project.ai.core.Equalable;
-import io.thirdreality.project.ai.neuron.ConsoleNeuron;
 import io.thirdreality.project.ai.neuron.Neuron;
+import io.thirdreality.project.ai.neuron.Runnable;
 
 import java.util.Scanner;
 
@@ -20,6 +20,11 @@ public class Main
             {
                 return o0.equals(o1);
             }
+        };
+
+        Runnable<String> action = n ->
+        {
+            // Do nothing.
         };
 
         AI<String> ai = new AI<>(e);
@@ -41,7 +46,7 @@ public class Main
                 break;
             }
 
-            ai.synchronize(new ConsoleNeuron(input), 1);
+            ai.synchronize(new Neuron<String>(input, action), 1);
             ai.finish();
 
             String n = ai.fire(input);

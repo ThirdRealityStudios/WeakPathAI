@@ -1,5 +1,6 @@
 package io.thirdreality.project.ai.neuron;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,10 +13,27 @@ public class Neuron<Datatype>
 
     private Runnable<Datatype> action;
 
+    /**
+     * Create a neuron with an action to call when triggered / fired.
+     *
+     * @param data Data to save in this neuron.
+     * @param action Action to call when fired.
+     */
     public Neuron(Datatype data, Runnable action)
     {
         this.data = data;
         this.action = action;
+    }
+
+    /**
+     * Create a neuron with NO action to call when triggered / fired.
+     *
+     * @param data Data to save in this neuron.
+     */
+    public Neuron(Datatype data)
+    {
+        this.data = data;
+        this.action = n -> {};
     }
 
     public void setData(Datatype data)
@@ -131,5 +149,54 @@ public class Neuron<Datatype>
         neuronCopied.hiddenLayerWeight = hiddenLayerWeightCopied;
 
         return neuronCopied;
+    }
+
+    /**
+     * Evaluates deep equality by calling the
+     * equals(..) method of the data value and
+     * action object.
+     * There is NO guarantee that the underlying
+     * neurons of the hidden layer do also match
+     * as there is no evaluation due to performance
+     * reasons.
+     *
+     * @param o Neuron to compare (as an Object)
+     * @return true if deeply equal. Otherwise false.
+     */
+    @Override
+    public boolean equals(Object o)
+    {
+        Neuron<Datatype> otherNeuron = (Neuron<Datatype>) o;
+
+        if(otherNeuron.hiddenLayer.size() != hiddenLayer.size() || otherNeuron.hiddenLayerWeight.size() != hiddenLayerWeight.size())
+        {
+            return false;
+        }
+
+        // Check deep equality of the neurons referenced in the hidden layer.
+        for(int i = 0; i < hiddenLayer.size(); i++)
+        {
+            Neuron<Datatype> n0 = hiddenLayer.get(i),
+                             n1 = otherNeuron.hiddenLayer.get(i);
+
+            if(!n0.equals(n1))
+            {
+                return false;
+            }
+        }
+
+        // Check deep equality of the weights for each neuron referenced in the hidden layer.
+        for(int i = 0; i < hiddenLayerWeight.size(); i++)
+        {
+            Integer n0 = hiddenLayerWeight.get(i),
+                    n1 = otherNeuron.hiddenLayerWeight.get(i);
+
+            if(!n0.equals(n1))
+            {
+                return false;
+            }
+        }
+
+        return otherNeuron.data.equals(data) && action.equals(action);
     }
 }
