@@ -32,7 +32,9 @@ The chatbot can be compiled and run in the Main.java file.
 
 Of course,
 
-you can do whatever you want with the AI..
+you still need to feed the chatbot with a lot of data
+
+and in the end you can do whatever you want with the AI..
 
 A chatbot is just an example here..
 
@@ -52,4 +54,4 @@ It will create links with neurons after calling AI.finish().
 
 Also, it will copy all neurons including the deeper layers (hidden layer) of each neuron,
 
-so every neuron can get its own independent weight (that is what I meant with "redundant").
+so every neuron can get its own independent weight (that is what I meant with "redundant" though it isn't in reality).
