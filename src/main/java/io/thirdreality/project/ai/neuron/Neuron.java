@@ -107,8 +107,29 @@ public class Neuron<Datatype>
         // 'action' always needs to be initialized for a neuron-specific action.
         assertNotNull(action);
 
-        Neuron<Datatype> copied = new Neuron<Datatype>(getData(), action);
+        // Copy data and action.
+        Neuron<Datatype> neuronCopied = new Neuron<Datatype>(getData(), action);
 
-        return copied;
+        // Now copy all underlying neurons, including the weights:
+        ArrayList<Neuron<Datatype>> hiddenLayerCopied = new ArrayList<>();
+        ArrayList<Integer> hiddenLayerWeightCopied = new ArrayList<>();
+
+        for(Neuron<Datatype> neuron : hiddenLayer)
+        {
+            // This action is VERY performance intensive as all underlying neurons get copied..
+            hiddenLayerCopied.add(neuron.copy());
+        }
+
+        neuronCopied.hiddenLayer = hiddenLayerCopied;
+
+        for(Integer i : hiddenLayerWeight)
+        {
+            // This action here is not that expensive as there are no structural deeper items to copy..
+            hiddenLayerWeightCopied.add(i);
+        }
+
+        neuronCopied.hiddenLayerWeight = hiddenLayerWeightCopied;
+
+        return neuronCopied;
     }
 }

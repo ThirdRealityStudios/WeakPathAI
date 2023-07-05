@@ -97,7 +97,7 @@ public class NeuronTest
     }
 
     @Test
-    public void testCopy0()
+    public void testCopyAndRun0()
     {
         // Create an IntegerNeuron which will simply increment its value when run (= fired per fire() method, when used in a neural network).
         IntegerNeuron n0 = new IntegerNeuron(0);
@@ -124,6 +124,5 @@ public class NeuronTest
         assertEquals(n1.getData(), 2);
         assertEquals(n2.getData(), 7);
         assertEquals(n3.getData(), 7);
-
     }
 }
