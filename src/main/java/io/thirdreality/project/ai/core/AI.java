@@ -62,7 +62,8 @@ public class AI<Datatype> implements Serializable
     {
         for(Neuron<Datatype> n : inputLayer)
         {
-            // TODO Find neuron that matches the input most (not 100% but like 98%)
+            // TODO Find neuron that matches the input most (not 100% but like 98%),
+            //  e.g. inherit from String and make a String class that overrides equals(..) and only compare similar strings (case-insensitive etc.).
             // Will fire the first neuron that matches this neuron (regard thresholds).
             if(n.getData().equals(input))
             {
