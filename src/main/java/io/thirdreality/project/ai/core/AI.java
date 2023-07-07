@@ -19,6 +19,20 @@ import static org.junit.jupiter.api.Assertions.*;
  * then the last one is chosen simply.
  * For better AI results try to make them as different as possible.
  *
+ * General notice: if you try to check if a neuron is
+ * contained in the AI object, then you need to differentiate
+ * between the method has "hasNeuronSimplyCompared(Neuron<Datatype> n0)"
+ * and "AI.this.inputLayer.contains(Object o)".
+ * The difference is that hasNeuronSimplyCompared(..) tells you if
+ * a neuron is contained in the input layer if only the 'data'
+ * variables do match with each other.
+ * AI.this.inputLayer.contains(..) on the other hand performs
+ * a complex check it will succeed if all the neuronal nets
+ * of both neurons (meaning the hidden layer) will match too exactly.
+ * So, if you want to make a simple "contains test",
+ * judging by the neurons value simply,
+ * then use hasNeuronSimplyCompared(..).
+ *
  * @param <Datatype>
  */
 public class AI<Datatype> implements Serializable
@@ -152,14 +166,43 @@ public class AI<Datatype> implements Serializable
     {
         syn = null;
 
+        // Create more neurons in the network, based on the input of this session.
+        createPartialSolutions(historyBuffer);
+
         history = historyBuffer;
 
         historyBuffer = new ArrayList<>();
 
-        // Create more neurons in the network, based on the input of this session.
-        createPartialSolutions(historyBuffer);
-
         return history;
+    }
+
+    /**
+     * Tells you if a given neuron is contained in the input layer of this AI.
+     * Note that only the 'data' of the corresponding neuron gets considered
+     * while searching and not other (deeper) characteristics!
+     *
+     * @param n0 Neuron to look for in the input layer.
+     * @return true if the neuron is contained in the input layer. Otherwise false.
+     */
+    public boolean hasNeuronSimplyCompared(Neuron<Datatype> n0)
+    {
+        if(n0 == null)
+            return false;
+
+        if(n0.getData() == null)
+            return false;
+
+        for(Neuron<Datatype> n1 : inputLayer)
+        {
+            if(n0.getData().equals(n1.getData()))
+                return true;
+            else
+            {
+                // TODO Instead: Try to merge all sub-nets to the existing neuron.
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -182,19 +225,24 @@ public class AI<Datatype> implements Serializable
      * So, in the end this method will create new and additional neurons in the network.
      *
      * Examples for senseful use:
-     * TODO Give examples with chat bot and finding a path.
      *
      * @param history History, returned by finish().
      */
     private void createPartialSolutions(ArrayList<Neuron<Datatype>> history)
     {
-        for(Neuron<Datatype> n : history)
+        // Use buffer to prevent ConcurrentModificationException because I try to write to inputLayer while it has read-access in the second inner loop.
+        ArrayList<Neuron<Datatype>> buffer = new ArrayList<>();
+
+        for(Neuron<Datatype> historyNeuron : history)
         {
-            if(!inputLayer.contains(n))
+            if(!hasNeuronSimplyCompared(historyNeuron))
             {
-                // TODO: Probably multiple neurons can exist with the same data value but with other networks in the input layer.
-                inputLayer.add(n.copy());
+                buffer.add(historyNeuron);
             }
         }
+        // From here, inputLayer can have write-access again.
+
+        // Safely add objects to the inputLayer ArrayList without causing an Exception because of read-access.
+        inputLayer.addAll(buffer);
     }
 }

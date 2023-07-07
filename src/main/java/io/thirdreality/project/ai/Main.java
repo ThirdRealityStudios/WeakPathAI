@@ -12,6 +12,8 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.util.Scanner;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
 public class Main
@@ -33,6 +35,8 @@ public class Main
                     System.out.println("Loading save file..");
 
                     AI<String> ai = m.load();
+
+                    assertNotNull(ai);
 
                     m.ai = ai;
                 }
@@ -82,6 +86,39 @@ public class Main
         encoder.close();
     }
 
+    public void feed(String filename) throws IOException
+    {
+        FileInputStream iS = new FileInputStream(filename);
+
+        FileReader r = new FileReader(filename);
+
+        BufferedReader b = new BufferedReader(r);
+
+        String nextLine = b.readLine();;
+
+        while(nextLine != null)
+        {
+            String[] words = nextLine.split(" ");
+
+            for(int i = 0; i < words.length && i < 20; i++)
+            {
+                if(words[i].equals(""))
+                    continue;
+
+                ai.synchronize(new Neuron<String>(words[i], n -> {System.out.print(n.getData() + " ");}), 1);
+            }
+
+            nextLine = b.readLine();
+        }
+
+        // Now process all possible neurons and data..
+        ai.finish();
+
+        System.out.println("AI: Data feed done!");
+
+        r.close();
+    }
+
     public Main()
     {
         action = n ->
@@ -107,6 +144,17 @@ public class Main
             if("/exit".equals(input))
             {
                 break;
+            }
+            else if("/feed".equals(input))
+            {
+                try
+                {
+                    feed("ai.feed");
+                }
+                catch(IOException e)
+                {
+                    e.printStackTrace();
+                }
             }
 
             ai.synchronize(new Neuron<String>(input, action), 1);
