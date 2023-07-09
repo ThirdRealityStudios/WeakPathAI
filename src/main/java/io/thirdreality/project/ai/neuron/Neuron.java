@@ -6,9 +6,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class Neuron<Datatype> implements Serializable
 {
-    private static int copies = 0;
-    private int instanceNumber = 0;
-
     private Datatype data;
 
     public ArrayList<Neuron<Datatype>> hiddenLayer = new ArrayList<>();
@@ -24,16 +21,12 @@ public class Neuron<Datatype> implements Serializable
      */
     public Neuron(Datatype data, Runnable<Datatype> action)
     {
-        instanceNumber = copies++;
-
         this.data = data;
         this.action = action;
     }
 
     public Neuron()
     {
-        instanceNumber = copies++;
-
         this.action = n ->
         {
 
@@ -87,9 +80,9 @@ public class Neuron<Datatype> implements Serializable
 
         for(int i = 1; i < hiddenLayer.size(); i++)
         {
-            if(hiddenLayerWeight.get(i) >= hiddenLayerWeight.get(heaviestNeuron))
+            if(hiddenLayerWeight.get(i) > hiddenLayerWeight.get(heaviestNeuron))
             {
-                // Remember Neurons which are cheaper to go.. (weight greater).
+                // Remember Neurons which are cheaper to go.. (meaning the heaviest weight of a neuron).
                 heaviestNeuron = i;
             }
         }

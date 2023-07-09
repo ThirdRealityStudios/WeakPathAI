@@ -2,7 +2,7 @@ package io.thirdreality.project.ai.test;
 
 import java.util.*;
 
-import io.thirdreality.project.ai.core.AI;
+import io.thirdreality.project.ai.AI;
 import io.thirdreality.project.ai.neuron.Neuron;
 
 import org.junit.jupiter.api.*;
@@ -60,7 +60,7 @@ public class AITest
 
         ai.synchronize(new Neuron<String>("1+1"), 0);
         ai.synchronize(new Neuron<String>("*"), 0);
-        ai.synchronize(new Neuron<String>("Wrong result"), 0);
+        ai.synchronize(new Neuron<String>("Wrong result"), 1);
 
         String output = ai.fire("1+1");
 
