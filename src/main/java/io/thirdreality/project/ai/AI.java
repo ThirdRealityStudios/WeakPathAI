@@ -2,8 +2,11 @@ package io.thirdreality.project.ai;
 
 import io.thirdreality.project.ai.neuron.Neuron;
 
+import javax.xml.crypto.Data;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -35,7 +38,10 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class AI<Datatype> implements Serializable
 {
-    public ArrayList<Neuron<Datatype>> inputLayer;
+    /**
+     * Simulates the input layer by using the inputNeuron's hiddenLayer.
+     */
+    public Neuron<Datatype> inputNeuron;
 
     private Neuron<Datatype> syn = null;
 
@@ -43,9 +49,73 @@ public class AI<Datatype> implements Serializable
 
     public AI()
     {
-        inputLayer = new ArrayList<>();
+        inputNeuron = new Neuron<Datatype>();
 
         historyBuffer = new ArrayList<>();
+    }
+
+    /**
+     * Finds an output,
+     * using the existing knowledge (neurons).
+     * This method will not train the AI but return an output,
+     * based on weights in the network.
+     *
+     * TODO Write fire(..) in a way it can accept a list of input arguments (input data)
+     *  that should be fired one by one for each data element (in the deeper corresponding neuron then).
+     *
+     * TODO JavaDOC description (this here alternative to fire(input))
+     *
+     * @return null if the AI has no idea. Otherwise an output.
+     */
+    public Datatype fire(LinkedList<Datatype> inputs)
+    {
+        return fire(inputNeuron, inputs);
+    }
+
+    /**
+     * Finds an output,
+     * using the existing knowledge (neurons).
+     * This method will not train the AI but return an output,
+     * based on weights in the network.
+     *
+     * TODO Write fire(..) in a way it can accept a list of input arguments (input data)
+     *  that should be fired one by one for each data element (in the deeper corresponding neuron then).
+     *
+     * TODO JavaDOC description (this here internal)
+     *
+     * @return null if the AI has no idea. Otherwise an output.
+     */
+    private Datatype fire(Neuron<Datatype> neuron, LinkedList<Datatype> inputs)
+    {
+        assertNotNull(inputs);
+
+        if(inputs.size() == 0)
+        {
+            return neuron.fire();
+        }
+
+        Datatype input = inputs.pop();
+
+        Neuron<Datatype> neuronHiddenLayerToFireUsingWeight = null;
+
+        for(Neuron<Datatype> neuronToFireUsingDataComparison : neuron.hiddenLayer)
+        {
+            // TODO Find neuron that matches the input most (not 100% but like 98%),
+            //  e.g. inherit from String and make a String class that overrides equals(..) and only compare similar strings (case-insensitive etc.).
+            // Will fire the first neuron that matches this neuron (regard thresholds).
+            if(neuronToFireUsingDataComparison.getData().equals(input))
+            {
+                return fire(neuronToFireUsingDataComparison, inputs);
+            }
+
+            neuronHiddenLayerToFireUsingWeight = neuronToFireUsingDataComparison;
+        }
+
+        // Make sure a neuron was found to fire:
+        if(neuronHiddenLayerToFireUsingWeight != null)
+            return neuronHiddenLayerToFireUsingWeight.fire();
+        else
+            return null;
     }
 
     /**
@@ -61,7 +131,14 @@ public class AI<Datatype> implements Serializable
      */
     public Datatype fire(Datatype input)
     {
-        for(Neuron<Datatype> n : inputLayer)
+        LinkedList<Datatype> inputs = new LinkedList<>();
+
+        inputs.push(input);
+
+        return fire(inputNeuron, inputs);
+
+        /*
+        for(Neuron<Datatype> n : inputNeuron.hiddenLayer)
         {
             // TODO Find neuron that matches the input most (not 100% but like 98%),
             //  e.g. inherit from String and make a String class that overrides equals(..) and only compare similar strings (case-insensitive etc.).
@@ -73,6 +150,7 @@ public class AI<Datatype> implements Serializable
         }
 
         return null;
+         */
     }
 
     /**
@@ -91,7 +169,7 @@ public class AI<Datatype> implements Serializable
         // If to look in the input layer for a neuron.
         if(syn == null)
         {
-            for(Neuron<Datatype> n : inputLayer)
+            for(Neuron<Datatype> n : inputNeuron.hiddenLayer)
             {
                 if(newNeuron.getData().equals(n.getData()))
                 {
@@ -112,7 +190,7 @@ public class AI<Datatype> implements Serializable
                 // Remember neuron synchronized for latter query.
                 historyBuffer.add(syn);
 
-                inputLayer.add(syn);
+                inputNeuron.hiddenLayer.add(syn);
             }
 
             return false;
@@ -194,7 +272,7 @@ public class AI<Datatype> implements Serializable
         if(n0.getData() == null)
             return false;
 
-        for(Neuron<Datatype> n1 : inputLayer)
+        for(Neuron<Datatype> n1 : inputNeuron.hiddenLayer)
         {
             if(n0.getData().equals(n1.getData()))
                 return true;
@@ -245,6 +323,6 @@ public class AI<Datatype> implements Serializable
         // From here, inputLayer can have write-access again.
 
         // Safely add objects to the inputLayer ArrayList without causing an Exception because of read-access.
-        inputLayer.addAll(buffer);
+        inputNeuron.hiddenLayer.addAll(buffer);
     }
 }

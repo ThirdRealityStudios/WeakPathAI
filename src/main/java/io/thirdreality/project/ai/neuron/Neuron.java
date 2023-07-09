@@ -1,7 +1,10 @@
 package io.thirdreality.project.ai.neuron;
 
+import javax.xml.crypto.Data;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class Neuron<Datatype> implements Serializable
@@ -47,6 +50,49 @@ public class Neuron<Datatype> implements Serializable
     public void setData(Datatype data)
     {
         this.data = data;
+    }
+
+    /**
+     * Fires an input value to this neuron.
+     * This neuron will try to fire the given
+     * value to another neuron until there is an end.
+     * The value at the end of the neuronal network
+     * is the output value you receive as a return value.
+     *
+     * TODO Accept stack for input
+     *
+     * @return Output value from the output layer.
+     */
+    public Datatype fire(LinkedList<Datatype> inputs)
+    {
+        assertEquals(hiddenLayer.size(), hiddenLayerWeight.size());
+
+        // 'action' always needs to be initialized for a neuron-specific action.
+        assertNotNull(action);
+
+        action.run(this);
+
+        if(hiddenLayer.isEmpty())
+        {
+            return data;
+        }
+        else if(hiddenLayer.size() == 1)
+        {
+            return hiddenLayer.get(0).fire();
+        }
+
+        int heaviestNeuron = 0;
+
+        for(int i = 1; i < hiddenLayer.size(); i++)
+        {
+            if(hiddenLayerWeight.get(i) > hiddenLayerWeight.get(heaviestNeuron))
+            {
+                // Remember Neurons which are cheaper to go.. (meaning the heaviest weight of a neuron).
+                heaviestNeuron = i;
+            }
+        }
+
+        return hiddenLayer.get(heaviestNeuron).fire();
     }
 
     /**

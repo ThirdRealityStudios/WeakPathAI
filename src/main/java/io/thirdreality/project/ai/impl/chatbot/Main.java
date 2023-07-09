@@ -11,6 +11,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -106,7 +107,7 @@ public class Main
                 if(words[i].equals(""))
                     continue;
 
-                ai.synchronize(new Neuron<SimilarString>(new SimilarString(words[i]), n -> {System.out.print(n.getData() + " ");}), 1);
+                ai.synchronize(new Neuron<SimilarString>(new SimilarString(words[i]), action), 1);
             }
 
             nextLine = b.readLine();
@@ -124,12 +125,27 @@ public class Main
     {
         action = n ->
         {
-            // Do nothing.
+            System.out.print(n.getData() + " ");
         };
 
         this.ai = new AI<SimilarString>();
 
         this.s = new Scanner(System.in);
+    }
+
+    private LinkedList<SimilarString> getInputWords(String line)
+    {
+        LinkedList<SimilarString> inputs = new LinkedList<>();
+
+        String[] words = line.split(" ");
+
+        for(String word : words)
+        {
+            // Make a comparable String which does not need to be 100% equal, judging by its characters and case-sensitivity.
+            inputs.add(new SimilarString(word));
+        }
+
+        return inputs;
     }
 
     public void run()
@@ -138,15 +154,15 @@ public class Main
         {
             System.out.print("Your input: ");
 
-            SimilarString input = new SimilarString(s.nextLine());
+            LinkedList<SimilarString> inputs = getInputWords(s.nextLine());
 
             System.out.println();
 
-            if("/exit".equals(input.getString()))
+            if("/exit".equals(inputs.getFirst().getString()))
             {
                 break;
             }
-            else if("/feed".equals(input.getString()))
+            else if("/feed".equals(inputs.getFirst().getString()))
             {
                 try
                 {
@@ -158,18 +174,23 @@ public class Main
                 }
             }
 
-            ai.synchronize(new Neuron<SimilarString>(input, action), 1);
-
-            SimilarString n = ai.fire(input);
-
-            // If there is any unknown answer / information, create new neurons and try
-            // to sort some data in order to give a better answer next time.
-            if(n == null)
+            // Synchronize sentence from input
+            for(SimilarString word : inputs)
             {
-                ai.finish();
+                ai.synchronize(new Neuron<SimilarString>(word, action), 0);
             }
 
-            System.out.println("AI: " + (n == null ? "I don't know" : n) + "\n");
+            if(inputs.size() > 2)
+                ai.finish();
+
+            // ai.synchronize(new Neuron<SimilarString>(input, action), 1);
+
+            SimilarString n = ai.fire(inputs);
+
+            if(n == null)
+                System.out.println("AI: I don't know");
+            else
+                System.out.println();
         }
     }
 }
