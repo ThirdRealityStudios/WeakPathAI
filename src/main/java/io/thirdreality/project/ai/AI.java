@@ -54,6 +54,9 @@ public class AI<Datatype> implements Serializable
      * This method will not train the AI but return an output,
      * based on weights in the network.
      *
+     * TODO Write fire(..) in a way it can accept a list of input arguments (input data)
+     *  that should be fired one by one for each data element (in the deeper corresponding neuron then).
+     *
      * @return null if the AI has no idea. Otherwise an output.
      */
     public Datatype fire(Datatype input)

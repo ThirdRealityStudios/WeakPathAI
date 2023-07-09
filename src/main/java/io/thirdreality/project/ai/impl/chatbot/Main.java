@@ -1,6 +1,7 @@
 package io.thirdreality.project.ai.impl.chatbot;
 
 import io.thirdreality.project.ai.AI;
+import io.thirdreality.project.ai.impl.chatbot.core.SimilarString;
 import io.thirdreality.project.ai.neuron.Neuron;
 import io.thirdreality.project.ai.neuron.Runnable;
 
@@ -18,8 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 // then press Enter. You can now see whitespace characters in your code.
 public class Main
 {
-    private Runnable<String> action;
-    private AI<String> ai;
+    private Runnable<SimilarString> action;
+    private AI<SimilarString> ai;
     private Scanner s;
 
     public static void main(String[] args)
@@ -34,7 +35,7 @@ public class Main
                 {
                     System.out.println("Loading save file..");
 
-                    AI<String> ai = m.load();
+                    AI<SimilarString> ai = m.load();
 
                     assertNotNull(ai);
 
@@ -62,11 +63,11 @@ public class Main
     /**
      * Load AI process.
      */
-    public AI<String> load() throws IOException, ClassNotFoundException
+    public AI<SimilarString> load() throws IOException, ClassNotFoundException
     {
         XMLDecoder decoder = new XMLDecoder(new FileInputStream("ai.data"));
 
-        AI<String> ai = (AI<String>) decoder.readObject();
+        AI<SimilarString> ai = (AI<SimilarString>) decoder.readObject();
 
         decoder.close();
 
@@ -105,7 +106,7 @@ public class Main
                 if(words[i].equals(""))
                     continue;
 
-                ai.synchronize(new Neuron<String>(words[i], n -> {System.out.print(n.getData() + " ");}), 1);
+                ai.synchronize(new Neuron<SimilarString>(new SimilarString(words[i]), n -> {System.out.print(n.getData() + " ");}), 1);
             }
 
             nextLine = b.readLine();
@@ -126,7 +127,7 @@ public class Main
             // Do nothing.
         };
 
-        this.ai = new AI<String>();
+        this.ai = new AI<SimilarString>();
 
         this.s = new Scanner(System.in);
     }
@@ -137,15 +138,15 @@ public class Main
         {
             System.out.print("Your input: ");
 
-            String input = s.nextLine();
+            SimilarString input = new SimilarString(s.nextLine());
 
             System.out.println();
 
-            if("/exit".equals(input))
+            if("/exit".equals(input.getString()))
             {
                 break;
             }
-            else if("/feed".equals(input))
+            else if("/feed".equals(input.getString()))
             {
                 try
                 {
@@ -157,9 +158,9 @@ public class Main
                 }
             }
 
-            ai.synchronize(new Neuron<String>(input, action), 1);
+            ai.synchronize(new Neuron<SimilarString>(input, action), 1);
 
-            String n = ai.fire(input);
+            SimilarString n = ai.fire(input);
 
             // If there is any unknown answer / information, create new neurons and try
             // to sort some data in order to give a better answer next time.
